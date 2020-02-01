@@ -23,5 +23,11 @@ namespace RestAndGraphNet.entities
         public string Name { get; set; }
         public string Size { get; set; }
         public Country Country { get; set; }
+        public int CountryId { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Size)}: {Size}, {nameof(Country)}: {Country}, {nameof(CountryId)}: {CountryId}";
+        }
     }
 }

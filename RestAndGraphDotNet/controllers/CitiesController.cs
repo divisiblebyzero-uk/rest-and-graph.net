@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RestAndGraphNet;
 using RestAndGraphNet.entities;
 
@@ -15,17 +16,19 @@ namespace RestAndGraphNet.controllers
     public class CitiesController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly ILogger<CitiesController> _logger;
 
-        public CitiesController(DataContext context)
+        public CitiesController(DataContext context, ILogger<CitiesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Cities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
-            return await _context.Cities.ToListAsync();
+            return await _context.Cities.Include(c => c.Country).ToListAsync();
         }
 
         // GET: api/Cities/5

@@ -29,8 +29,7 @@ namespace RestAndGraphNet
 
                 try
                 {
-                    var context = services.GetRequiredService<DataContext>();
-                    DbInitializer.Initialize(context);
+                    services.GetRequiredService<DbInitializer>().Initialize();
                     //context.Database.EnsureCreated();
                 }
                 catch (Exception ex)
@@ -43,6 +42,11 @@ namespace RestAndGraphNet
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

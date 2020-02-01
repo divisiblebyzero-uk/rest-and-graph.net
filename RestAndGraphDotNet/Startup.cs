@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RestAndGraphNet.entities;
 
 namespace RestAndGraphNet
 {
@@ -31,6 +32,7 @@ namespace RestAndGraphNet
             services.AddDbContext<DataContext>(options =>
                 options.UseInMemoryDatabase("RestAndGraph"));
             services.AddControllers();
+            services.AddScoped<DbInitializer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +50,7 @@ namespace RestAndGraphNet
             }
 
             app.UseHttpsRedirection();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
