@@ -1,15 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using GraphQL;
+using GraphQL.Http;
+using GraphQL.Server;
+using GraphQL.Server.Ui.GraphiQL;
+using GraphQL.Server.Ui.Playground;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using RestAndGraphNet.entities;
+using RestAndGraphNet.graphql;
 
 namespace RestAndGraphNet
 {
@@ -21,23 +26,54 @@ namespace RestAndGraphNet
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; private set;  }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*
-            services.AddDbContext<DataContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            */
+            // Workaround until GraphQL can swap off Newtonsoft.Json and onto the new MS one.
+            // Depending on whether you're using IIS or Kestrel, the code required is different
+            // See: https://github.com/graphql-dotnet/graphql-dotnet/issues/1116
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
+
             services.AddDbContext<DataContext>(options =>
                 options.UseInMemoryDatabase("RestAndGraph"));
             services.AddControllers();
             services.AddScoped<DbInitializer>();
+
+            services.AddScoped<IDocumentExecuter, DocumentExecuter>();
+            services.AddScoped<IDocumentWriter, DocumentWriter>();
+            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+            services.AddScoped<CountryQuery>();
+            services.AddScoped<CountryType>();
+
+            
+            services.AddScoped<ISchema, AppSchema>();
+
+            //services.AddScoped<AppSchema>();
+            /*services.AddGraphQL(options => 
+                {
+                    options.EnableMetrics = true;
+                    options.ExposeExceptions = true;
+                })
+                .AddWebSockets()
+                .AddDataLoader();*/
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            Environment = env;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -52,11 +88,19 @@ namespace RestAndGraphNet
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
+            //app.UseWebSockets();
+            //app.UseGraphQLWebSockets<AppSchema>("/graphql");
+            //app.UseGraphQL<AppSchema>("/graphql");
+            app.UseGraphiQLServer(new GraphiQLOptions
+            {
+                GraphiQLPath = "/ui/graphiql",
+                GraphQLEndPoint = "/graphql",
+            });
+            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
             app.UseRouting();
 
             app.UseAuthorization();
-
+        
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

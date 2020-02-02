@@ -3,6 +3,8 @@
 
 This is a project to demo REST and GraphQL using C# / EF Core. There are sister projects in Node.JS, Java and Kotlin.
 
+NB this is not yet fully functional.
+
 ## Functional Description
 
 The application has a simple entity model: Countries and Cities
