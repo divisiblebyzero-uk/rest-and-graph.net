@@ -51,21 +51,12 @@ namespace RestAndGraphNet
 
             services.AddScoped<IDocumentExecuter, DocumentExecuter>();
             services.AddScoped<IDocumentWriter, DocumentWriter>();
-            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+
             services.AddScoped<CountryQuery>();
             services.AddScoped<CountryType>();
 
             
             services.AddScoped<ISchema, AppSchema>();
-
-            //services.AddScoped<AppSchema>();
-            /*services.AddGraphQL(options => 
-                {
-                    options.EnableMetrics = true;
-                    options.ExposeExceptions = true;
-                })
-                .AddWebSockets()
-                .AddDataLoader();*/
 
             services.AddMvc();
         }
@@ -88,14 +79,8 @@ namespace RestAndGraphNet
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            //app.UseWebSockets();
-            //app.UseGraphQLWebSockets<AppSchema>("/graphql");
-            //app.UseGraphQL<AppSchema>("/graphql");
-            app.UseGraphiQLServer(new GraphiQLOptions
-            {
-                GraphiQLPath = "/ui/graphiql",
-                GraphQLEndPoint = "/graphql",
-            });
+
+            app.UseGraphiQLServer();
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
             app.UseRouting();
 
