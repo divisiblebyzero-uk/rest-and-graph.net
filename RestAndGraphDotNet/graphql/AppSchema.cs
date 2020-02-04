@@ -14,10 +14,10 @@ namespace RestAndGraphNet.graphql
 {
     public class AppSchema : Schema
     {
-        public AppSchema(CountryQuery countryQuery)
+        public AppSchema(CountryQuery countryQuery, CountryMutation countryMutation)
         {
             Query = countryQuery;
-            //Mutation = provider.GetRequiredService<CountryMutation>();
+            Mutation = countryMutation;
         }
     }
 }

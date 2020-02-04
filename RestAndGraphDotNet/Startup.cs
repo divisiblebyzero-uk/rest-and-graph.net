@@ -53,6 +53,7 @@ namespace RestAndGraphNet
             services.AddScoped<IDocumentWriter, DocumentWriter>();
 
             services.AddScoped<CountryQuery>();
+            services.AddScoped<CountryMutation>();
             services.AddScoped<CountryType>();
 
             
