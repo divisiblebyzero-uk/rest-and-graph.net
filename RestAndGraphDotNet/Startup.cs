@@ -52,9 +52,10 @@ namespace RestAndGraphNet
             services.AddScoped<IDocumentExecuter, DocumentExecuter>();
             services.AddScoped<IDocumentWriter, DocumentWriter>();
 
-            services.AddScoped<CountryQuery>();
-            services.AddScoped<CountryMutation>();
+            services.AddScoped<AppQuery>();
+            services.AddScoped<AppMutation>();
             services.AddScoped<CountryType>();
+            services.AddScoped<CityType>();
 
             
             services.AddScoped<ISchema, AppSchema>();

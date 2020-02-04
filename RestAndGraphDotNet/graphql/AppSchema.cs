@@ -14,7 +14,7 @@ namespace RestAndGraphNet.graphql
 {
     public class AppSchema : Schema
     {
-        public AppSchema(CountryQuery countryQuery, CountryMutation countryMutation)
+        public AppSchema(AppQuery countryQuery, AppMutation countryMutation)
         {
             Query = countryQuery;
             Mutation = countryMutation;

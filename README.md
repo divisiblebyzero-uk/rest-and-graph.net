@@ -95,7 +95,7 @@ You can browse the API using the docs link at the right hand side of graphiql, o
 ```
 
 
-#### Insert a new country - NOT YET IMPLEMENTED
+#### Insert a new country
 ```graphql
 mutation {
   createCountry(name: "Bolivia", language: "Bolivian")
