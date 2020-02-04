@@ -52,11 +52,9 @@ Note that the Cities are full-fat entities - ie the City record contains the ent
 
 ### GraphQL
 
-In the `service.graphql` are the Query and Mutation objects, and in `src/main/resources/graphql` is the graphqls files which define the contract.
+In the `graphql` package are the Query and Mutation objects, the controller and schema for graphql.
 
-The application includes an embedded graphiql interface, so fire it up and browse to http://localhost:8080/graphiql.
-
-Don't forget to insert some test data (http://localhost:8080/manual/insertData) first otherwise you won't see anything.
+The application includes an embedded graphiql interface, so fire it up and browse to /graphiql.
 
 You can browse the API using the docs link at the right hand side of graphiql, or alternatively try one of the following:
 
@@ -82,7 +80,7 @@ You can browse the API using the docs link at the right hand side of graphiql, o
 }
 ```
 
-#### Grab a particular city
+#### Grab a particular city - NOT YET IMPLEMENTED
 ```graphql
 {
   city(id: 1) {
@@ -97,7 +95,7 @@ You can browse the API using the docs link at the right hand side of graphiql, o
 ```
 
 
-#### Insert a new country
+#### Insert a new country - NOT YET IMPLEMENTED
 ```graphql
 mutation {
   createCountry(name: "Bolivia", language: "Bolivian")
@@ -111,7 +109,7 @@ Behind the scene, the queries and mutations are using the manual JPA repositorie
 
 ## Running the application
 
-Run via "mvn spring-boot:run".
+Run via "dotnet run".
 
 As a convenience, / will return a web page with links to the live URIs.
 
