@@ -16,7 +16,6 @@ namespace RestAndGraphNet.graphql
     {
         public AppSchema(CountryQuery countryQuery)
         {
-            Console.WriteLine("Hello - I'm constructing");
             Query = countryQuery;
             //Mutation = provider.GetRequiredService<CountryMutation>();
         }

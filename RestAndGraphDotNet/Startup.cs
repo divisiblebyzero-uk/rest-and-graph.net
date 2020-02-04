@@ -46,7 +46,7 @@ namespace RestAndGraphNet
 
             services.AddDbContext<DataContext>(options =>
                 options.UseInMemoryDatabase("RestAndGraph"));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddScoped<DbInitializer>();
 
             services.AddScoped<IDocumentExecuter, DocumentExecuter>();
@@ -57,8 +57,6 @@ namespace RestAndGraphNet
 
             
             services.AddScoped<ISchema, AppSchema>();
-
-            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

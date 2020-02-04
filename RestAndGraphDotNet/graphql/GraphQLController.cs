@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace RestAndGraphNet.graphql
@@ -14,17 +15,20 @@ namespace RestAndGraphNet.graphql
     {
         private readonly IDocumentExecuter _documentExecuter;
         private readonly ISchema _schema;
+        private readonly ILogger<GraphQLController> _logger;
 
-        public GraphQLController(ISchema schema, IDocumentExecuter documentExecuter)
+        public GraphQLController(ISchema schema, IDocumentExecuter documentExecuter, ILogger<GraphQLController> logger)
         {
             _schema = schema;
             _documentExecuter = documentExecuter;
+            _logger = logger;
 
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query)
         {
+            _logger.LogInformation($"New request: {query.Query}");
             if (query == null) { throw new ArgumentNullException(nameof(query)); }
             var inputs = query.Variables.ToInputs();
             var executionOptions = new ExecutionOptions
@@ -38,14 +42,12 @@ namespace RestAndGraphNet.graphql
 
             if (result.Errors?.Count > 0)
             {
-                Console.WriteLine("Error: " + result);
-                Console.WriteLine(JsonConvert.SerializeObject(result));
+                Console.WriteLine($"Error: {result.Errors}");
                 return BadRequest(result);
             }
-            Console.WriteLine(result);
-            
-            return Ok(JsonConvert.SerializeObject(result));
-            //return Ok(result);
+            _logger.LogInformation($"Result: {JsonConvert.SerializeObject(result.Data)}");
+
+            return Ok(result);
         }
     }
 }
